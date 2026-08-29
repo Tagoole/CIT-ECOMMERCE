@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notifications</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/pages/notifications.css" />
+</head>
+<body>
+  <header class="page-header">
+    <h1>Notifications</h1>
+  </header>
+
+  <main class="notifications-main">
+    <div id="notifications-status" class="status-bar status-success" hidden></div>
+    <div id="notifications-error" class="status-bar status-error" hidden></div>
+
+    <nav class="tab-bar">
+      <button id="tab-messages-btn" class="tab-btn active" type="button">Messages</button>
+      <button id="tab-notifications-btn" class="tab-btn" type="button">Notifications</button>
+    </nav>
+
+    <section id="panel-messages" class="messages-panel">
+      <div class="panel-toolbar">
+        <h2>In-App Messages</h2>
+        <button id="new-message-btn" class="btn btn-primary">+ New Message</button>
+      </div>
+      <ul id="messages-list" class="messages-list">
+        <li class="empty-row">Loading...</li>
+      </ul>
+    </section>
+
+    <section id="panel-notifications" class="notifications-panel" hidden>
+      <div class="panel-toolbar">
+        <h2>App Notifications</h2>
+        <button id="add-notification-btn" class="btn btn-primary">+ New Notification</button>
+      </div>
+      <table class="notifications-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Body</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="notifications-table-body">
+          <tr><td colspan="3" class="empty-row">Loading...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <dialog id="notification-modal" class="modal">
+    <form id="notification-form" class="modal-form">
+      <h2 id="notification-modal-title">New Notification</h2>
+      <div id="notification-form-fields" class="form-fields"></div>
+      <div class="modal-actions">
+        <button type="button" id="notification-cancel-btn" class="btn btn-secondary">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="message-modal" class="modal">
+    <form id="message-form" class="modal-form">
+      <h2 id="message-modal-title">New Message</h2>
+      <div id="message-form-fields" class="form-fields"></div>
+      <div class="modal-actions">
+        <button type="button" id="message-cancel-btn" class="btn btn-secondary">Cancel</button>
+        <button type="submit" class="btn btn-primary">Send</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="../js/notifications/notifications.js"></script>
+</body>
+</html>

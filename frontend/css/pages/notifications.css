@@ -1,0 +1,112 @@
+.notifications-main {
+  padding: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Tabs */
+.tab-bar {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 1.25rem;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab-btn:hover {
+  color: var(--text);
+}
+
+.tab-btn.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+}
+
+/* Panels */
+.panel-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.panel-toolbar h2 {
+  font-size: 1.1rem;
+}
+
+/* Messages */
+.messages-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.message-card {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+}
+
+.message-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+.message-author,
+.message-owner {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.message-arrow {
+  color: var(--muted);
+}
+
+.message-text {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.message-actions {
+  margin-top: 0.5rem;
+}
+
+/* Notifications table */
+.notifications-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.notifications-table th,
+.notifications-table td {
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem;
+}
+
+.notifications-table thead th {
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 2px solid var(--border-color);
+}
