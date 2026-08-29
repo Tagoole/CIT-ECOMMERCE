@@ -1,9 +1,11 @@
 // API endpoint - replace once the auth backend is ready
 const API_URL = "https://backend-api-production-b1c1.up.railway.app/auth/register";
 
+// Get the form and status element from the page
 const form = document.querySelector("#registerForm");
 const statusEl = document.querySelector("#registerStatus");
 
+// Get every input field
 const email = document.querySelector("#email");
 const phone = document.querySelector("#phone");
 const username = document.querySelector("#username");
@@ -15,10 +17,7 @@ const usernameError = document.querySelector("#usernameError");
 const passwordError = document.querySelector("#passwordError");
 const confirmPasswordError = document.querySelector("#confirmPasswordError");
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_RE = /^\+?\d[\d\s-]{8,14}$/;
-const USERNAME_RE = /^[a-zA-Z0-9_]{3,20}$/;
-
+// Shows or clears an error message under a field
 function setError(input, errorEl, message) {
   input.classList.remove("auth-form__input--invalid");
   errorEl.textContent = "";
@@ -28,25 +27,26 @@ function setError(input, errorEl, message) {
   }
 }
 
+// Check all fields and return true if everything is valid
 function validate() {
   let valid = true;
 
-  if (!EMAIL_RE.test(email.value.trim())) {
+  if (!email.value.trim() || !email.value.includes("@")) {
     setError(email, emailError, "Enter a valid email address.");
     valid = false;
   } else {
     setError(email, emailError);
   }
 
-  if (!PHONE_RE.test(phone.value.trim())) {
-    setError(phone, phoneError, "Enter a valid phone number.");
+  if (!phone.value.trim()) {
+    setError(phone, phoneError, "Enter your phone number.");
     valid = false;
   } else {
     setError(phone, phoneError);
   }
 
-  if (!USERNAME_RE.test(username.value.trim())) {
-    setError(username, usernameError, "Username must be 3-20 letters, numbers or underscores.");
+  if (username.value.trim().length < 3) {
+    setError(username, usernameError, "Username must be at least 3 characters.");
     valid = false;
   } else {
     setError(username, usernameError);
@@ -69,22 +69,26 @@ function validate() {
   return valid;
 }
 
+// Read the stored users from the browser
 function getUsers() {
   return JSON.parse(localStorage.getItem("cit_users") || "[]");
 }
 
+// Save the list of users to the browser
 function saveUsers(users) {
   localStorage.setItem("cit_users", JSON.stringify(users));
 }
 
-// REGISTER
+// ADD USER
 form.addEventListener("submit", async (event) => {
-  event.preventDefault();
+  event.preventDefault(); // stop the page from reloading
 
+  // Stop here if any field is invalid
   if (!validate()) {
     return;
   }
 
+  // Collect the form values into one object
   const newUser = {
     email: email.value.trim().toLowerCase(),
     phone: phone.value.trim(),
@@ -106,7 +110,6 @@ form.addEventListener("submit", async (event) => {
     if (!response.ok) {
       throw new Error("Failed to register");
     }
-    // ---------------------------------------------------------------------------
 
   } catch (error) {
     // Demo fallback - keep the flow working until the backend is wired up
@@ -125,6 +128,7 @@ form.addEventListener("submit", async (event) => {
     saveUsers(users);
   }
 
+  // Tell the user it worked and go to the login page
   statusEl.textContent = "Account created! Redirecting...";
   form.reset();
   window.location.href = "login.html";

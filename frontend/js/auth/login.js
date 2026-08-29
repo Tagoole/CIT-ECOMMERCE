@@ -1,16 +1,17 @@
 // API endpoint - replace once the auth backend is ready
 const API_URL = "https://backend-api-production-b1c1.up.railway.app/auth/login";
 
+// Get the form and status element from the page
 const form = document.querySelector("#loginForm");
 const statusEl = document.querySelector("#loginStatus");
 
+// Get every input field
 const identifier = document.querySelector("#identifier");
 const password = document.querySelector("#password");
 const identifierError = document.querySelector("#identifierError");
 const passwordError = document.querySelector("#passwordError");
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+// Shows or clears an error message under a field
 function setError(input, errorEl, message) {
   input.classList.remove("auth-form__input--invalid");
   errorEl.textContent = "";
@@ -20,15 +21,16 @@ function setError(input, errorEl, message) {
   }
 }
 
+// Read the stored users from the browser
 function getUsers() {
   return JSON.parse(localStorage.getItem("cit_users") || "[]");
 }
 
+// Check that both fields were filled in
 function validate() {
-  const idValue = identifier.value.trim();
   let valid = true;
 
-  if (!idValue || (!EMAIL_RE.test(idValue) && idValue.length < 3)) {
+  if (!identifier.value.trim()) {
     setError(identifier, identifierError, "Enter your email or username.");
     valid = false;
   } else {
@@ -47,8 +49,9 @@ function validate() {
 
 // LOGIN
 form.addEventListener("submit", async (event) => {
-  event.preventDefault();
+  event.preventDefault(); // stop the page from reloading
 
+  // Stop here if any field is invalid
   if (!validate()) {
     return;
   }
@@ -72,7 +75,6 @@ form.addEventListener("submit", async (event) => {
 
     const user = await response.json();
     localStorage.setItem("cit_current_user", JSON.stringify(user));
-    // -------------------------------------------------------------------------
 
   } catch (error) {
     // Demo fallback - keep the flow working until the backend is wired up
@@ -82,6 +84,7 @@ form.addEventListener("submit", async (event) => {
         (existing.username || "").toLowerCase() === idValue
     );
 
+    // Wrong identifier or password
     if (!user || user.password !== password.value) {
       setError(password, passwordError, "Incorrect email/username or password.");
       statusEl.textContent = "";
@@ -91,6 +94,7 @@ form.addEventListener("submit", async (event) => {
     localStorage.setItem("cit_current_user", JSON.stringify(user));
   }
 
+  // Save the session and go to the profile page
   statusEl.textContent = "Login successful! Redirecting...";
   form.reset();
   window.location.href = "profile.html";
