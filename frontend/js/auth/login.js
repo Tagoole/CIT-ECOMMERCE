@@ -1,17 +1,10 @@
-// API endpoint - replace once the auth backend is ready
-const API_URL = "https://backend-api-production-b1c1.up.railway.app/auth/login";
-
-// Get the form and status element from the page
 const form = document.querySelector("#loginForm");
-const statusEl = document.querySelector("#loginStatus");
-
-// Get every input field
 const identifier = document.querySelector("#identifier");
 const password = document.querySelector("#password");
 const identifierError = document.querySelector("#identifierError");
 const passwordError = document.querySelector("#passwordError");
+const statusEl = document.querySelector("#loginStatus");
 
-// Shows or clears an error message under a field
 function setError(input, errorEl, message) {
   input.classList.remove("auth-form__input--invalid");
   errorEl.textContent = "";
@@ -21,12 +14,6 @@ function setError(input, errorEl, message) {
   }
 }
 
-// Read the stored users from the browser
-function getUsers() {
-  return JSON.parse(localStorage.getItem("cit_users") || "[]");
-}
-
-// Check that both fields were filled in
 function validate() {
   let valid = true;
 
@@ -47,55 +34,33 @@ function validate() {
   return valid;
 }
 
-// LOGIN
 form.addEventListener("submit", async (event) => {
-  event.preventDefault(); // stop the page from reloading
+  event.preventDefault();
 
-  // Stop here if any field is invalid
   if (!validate()) {
     return;
   }
 
-  const idValue = identifier.value.trim().toLowerCase();
-
-  // Show loading state
   statusEl.textContent = "Logging in...";
 
   try {
-    // --- API CALL (placeholder: swap in the real login endpoint/response) ---
-    const response = await fetch(API_URL, {
+    const data = await apiRequest(API.login, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ identifier: idValue, password: password.value }),
+      body: JSON.stringify({
+        identifier: identifier.value.trim(),
+        password: password.value,
+      }),
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to log in");
+    const user = (data && data.user) || data;
+    if (data && data.token) {
+      localStorage.setItem("cit_token", data.token);
     }
-
-    const user = await response.json();
     localStorage.setItem("cit_current_user", JSON.stringify(user));
 
+    statusEl.textContent = "Logged in! Redirecting...";
+    window.location.href = "profile.html";
   } catch (error) {
-    // Demo fallback - keep the flow working until the backend is wired up
-    const user = getUsers().find(
-      (existing) =>
-        (existing.email || "").toLowerCase() === idValue ||
-        (existing.username || "").toLowerCase() === idValue
-    );
-
-    // Wrong identifier or password
-    if (!user || user.password !== password.value) {
-      setError(password, passwordError, "Incorrect email/username or password.");
-      statusEl.textContent = "";
-      return;
-    }
-
-    localStorage.setItem("cit_current_user", JSON.stringify(user));
+    statusEl.textContent = error.message || "Login failed. Please try again.";
   }
-
-  // Save the session and go to the profile page
-  statusEl.textContent = "Login successful! Redirecting...";
-  form.reset();
-  window.location.href = "profile.html";
 });

@@ -13,14 +13,6 @@
   const PHONE_RE = /^\+?\d[\d\s-]{8,14}$/;
   const USERNAME_RE = /^[a-zA-Z0-9_]{3,20}$/;
 
-  function getUsers() {
-    return JSON.parse(localStorage.getItem("cit_users") || "[]");
-  }
-
-  function saveUsers(users) {
-    localStorage.setItem("cit_users", JSON.stringify(users));
-  }
-
   function getCurrentUser() {
     return JSON.parse(localStorage.getItem("cit_current_user") || "null");
   }
@@ -73,7 +65,7 @@
     return valid;
   }
 
-  form.addEventListener("submit", function (event) {
+  form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     if (!validate()) {
@@ -84,29 +76,28 @@
       email: email.value.trim().toLowerCase(),
       phone: phone.value.trim(),
       username: username.value.trim(),
-      password: currentUser.password,
-      createdAt: currentUser.createdAt
     };
 
-    const users = getUsers().map(function (user) {
-      const isSame =
-        (user.email || "").toLowerCase() === (currentUser.email || "").toLowerCase() ||
-        (user.username || "").toLowerCase() === (currentUser.username || "").toLowerCase();
-      return isSame ? updated : user;
-    });
+    try {
+      const data = await apiRequest(API.profile, {
+        method: "PUT",
+        body: JSON.stringify(updated),
+      });
 
-    if (!users.some(function (user) { return (user.email || "") === updated.email && (user.username || "") === updated.username; })) {
-      users.push(updated);
+      const savedUser = (data && data.user) || data || {};
+      const sessionUser = Object.assign({}, currentUser, savedUser);
+
+      localStorage.setItem("cit_current_user", JSON.stringify(sessionUser));
+      greeting.textContent = sessionUser.username;
+      alert("Profile updated.");
+    } catch (error) {
+      alert(error.message || "Failed to update profile. Please try again.");
     }
-
-    saveUsers(users);
-    localStorage.setItem("cit_current_user", JSON.stringify(updated));
-    greeting.textContent = updated.username;
-    alert("Profile updated.");
   });
 
   logoutButton.addEventListener("click", function () {
     localStorage.removeItem("cit_current_user");
+    localStorage.removeItem("cit_token");
     window.location.href = "login.html";
   });
 })();

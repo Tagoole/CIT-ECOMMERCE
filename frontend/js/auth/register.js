@@ -1,11 +1,7 @@
-// API endpoint - replace once the auth backend is ready
-const API_URL = "https://backend-api-production-b1c1.up.railway.app/auth/register";
-
-// Get the form and status element from the page
+//const API = "api-url"; // Replace with your actual API URL
 const form = document.querySelector("#registerForm");
 const statusEl = document.querySelector("#registerStatus");
 
-// Get every input field
 const email = document.querySelector("#email");
 const phone = document.querySelector("#phone");
 const username = document.querySelector("#username");
@@ -17,7 +13,6 @@ const usernameError = document.querySelector("#usernameError");
 const passwordError = document.querySelector("#passwordError");
 const confirmPasswordError = document.querySelector("#confirmPasswordError");
 
-// Shows or clears an error message under a field
 function setError(input, errorEl, message) {
   input.classList.remove("auth-form__input--invalid");
   errorEl.textContent = "";
@@ -27,7 +22,6 @@ function setError(input, errorEl, message) {
   }
 }
 
-// Check all fields and return true if everything is valid
 function validate() {
   let valid = true;
 
@@ -69,26 +63,14 @@ function validate() {
   return valid;
 }
 
-// Read the stored users from the browser
-function getUsers() {
-  return JSON.parse(localStorage.getItem("cit_users") || "[]");
-}
-
-// Save the list of users to the browser
-function saveUsers(users) {
-  localStorage.setItem("cit_users", JSON.stringify(users));
-}
-
-// ADD USER
 form.addEventListener("submit", async (event) => {
-  event.preventDefault(); // stop the page from reloading
+  event.preventDefault();
 
-  // Stop here if any field is invalid
   if (!validate()) {
     return;
   }
 
-  // Collect the form values into one object
+
   const newUser = {
     email: email.value.trim().toLowerCase(),
     phone: phone.value.trim(),
@@ -96,39 +78,19 @@ form.addEventListener("submit", async (event) => {
     password: password.value,
   };
 
-  // Show loading state
   statusEl.textContent = "Creating your account...";
 
   try {
-    // --- API CALL (placeholder: swap in the real register endpoint/response) ---
-    const response = await fetch(API_URL, {
+    await apiRequest(API.register, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newUser),
     });
-
-    if (!response.ok) {
-      throw new Error("Failed to register");
-    }
-
   } catch (error) {
-    // Demo fallback - keep the flow working until the backend is wired up
-    const users = getUsers();
-    const exists = users.some(
-      (existing) =>
-        existing.email === newUser.email || existing.username === newUser.username
-    );
-
-    if (exists) {
-      statusEl.textContent = "Email or username already registered.";
-      return;
-    }
-
-    users.push(newUser);
-    saveUsers(users);
+    statusEl.textContent = error.message || "Failed to register. Please try again.";
+    return;
   }
 
-  // Tell the user it worked and go to the login page
+
   statusEl.textContent = "Account created! Redirecting...";
   form.reset();
   window.location.href = "login.html";
