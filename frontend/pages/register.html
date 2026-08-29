@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CIT E-Commerce | Register</title>
+    <link rel="stylesheet" href="../css/pages/auth.css" />
+  </head>
+  <body class="auth-body">
+    <main class="auth-card">
+      <h1 class="auth-title">Create Account</h1>
+      <p class="auth-subtitle">Join CIT E-Commerce</p>
+
+      <form id="registerForm" class="auth-form" novalidate>
+        <div class="auth-form__group">
+          <label class="auth-form__label" for="email">Email</label>
+          <input
+            class="auth-form__input"
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          />
+          <span class="auth-form__error" id="emailError"></span>
+        </div>
+
+        <div class="auth-form__group">
+          <label class="auth-form__label" for="phone">Phone Number</label>
+          <input
+            class="auth-form__input"
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="+256 700 000 000"
+            autocomplete="tel"
+            required
+          />
+          <span class="auth-form__error" id="phoneError"></span>
+        </div>
+
+        <div class="auth-form__group">
+          <label class="auth-form__label" for="username">Username</label>
+          <input
+            class="auth-form__input"
+            type="text"
+            id="username"
+            name="username"
+            placeholder="johndoe"
+            autocomplete="username"
+            minlength="3"
+            maxlength="20"
+            required
+          />
+          <span class="auth-form__error" id="usernameError"></span>
+        </div>
+
+        <div class="auth-form__group">
+          <label class="auth-form__label" for="password">Password</label>
+          <input
+            class="auth-form__input"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="At least 8 characters"
+            autocomplete="new-password"
+            minlength="8"
+            required
+          />
+          <span class="auth-form__error" id="passwordError"></span>
+        </div>
+
+        <div class="auth-form__group">
+          <label class="auth-form__label" for="confirmPassword">Confirm Password</label>
+          <input
+            class="auth-form__input"
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Re-enter your password"
+            autocomplete="new-password"
+            required
+          />
+          <span class="auth-form__error" id="confirmPasswordError"></span>
+        </div>
+
+        <button type="submit" class="btn btn--primary">Register</button>
+      </form>
+
+      <p class="auth-alt">
+        Already have an account? <a class="auth-alt__link" href="login.html">Log in</a>
+      </p>
+    </main>
+
+    <script src="../js/auth/register.js"></script>
+  </body>
+</html>
