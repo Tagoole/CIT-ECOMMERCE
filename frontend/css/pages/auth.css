@@ -121,6 +121,16 @@
   cursor: not-allowed;
 }
 
+.auth-status {
+  box-sizing: border-box;
+  margin: 12px 0 0;
+  padding: 0;
+  text-align: center;
+  font-size: 13px;
+  color: #64748b;
+  min-height: 20px;
+}
+
 .auth-alt {
   box-sizing: border-box;
   margin: 24px 0 0;
