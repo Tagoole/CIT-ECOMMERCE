@@ -1,4 +1,65 @@
 <!DOCTYPE html>
-<html>
-  
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CIT E-Commerce | Profile</title>
+    <link rel="stylesheet" href="../css/pages/profile.css" />
+  </head>
+  <body class="profile-body">
+    <main class="profile-card">
+      <h1 class="profile-title">My Profile</h1>
+      <p class="profile-subtitle">Welcome, <span id="profileGreeting">friend</span></p>
+
+      <form id="profileForm" class="profile-form" novalidate>
+        <div class="profile-form__group">
+          <label class="profile-form__label" for="username">Username</label>
+          <input
+            class="profile-form__input"
+            type="text"
+            id="username"
+            name="username"
+            minlength="3"
+            maxlength="20"
+            required
+          />
+          <span class="profile-form__error" id="usernameError"></span>
+        </div>
+
+        <div class="profile-form__group">
+          <label class="profile-form__label" for="phone">Phone Number</label>
+          <input
+            class="profile-form__input"
+            type="tel"
+            id="phone"
+            name="phone"
+            autocomplete="tel"
+            required
+          />
+          <span class="profile-form__error" id="phoneError"></span>
+        </div>
+
+        <div class="profile-form__group">
+          <label class="profile-form__label" for="email">Email</label>
+          <input
+            class="profile-form__input"
+            type="email"
+            id="email"
+            name="email"
+            autocomplete="email"
+            required
+          />
+          <span class="profile-form__error" id="emailError"></span>
+        </div>
+
+        <button type="submit" class="btn btn--primary">Save Changes</button>
+      </form>
+
+      <p class="profile-signout">
+        <button type="button" id="logoutButton" class="btn btn--ghost">Log out</button>
+      </p>
+    </main>
+
+    <script src="../js/profile/profile.js"></script>
+  </body>
 </html>

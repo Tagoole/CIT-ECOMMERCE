@@ -57,6 +57,6 @@
     }
 
     localStorage.setItem("cit_current_user", JSON.stringify(user));
-    window.location.href = "login.html";
+    window.location.href = "profile.html";
   });
 })();

@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-  padding: 1rem;
+  padding: 16px;
 }
 
 .auth-card {
@@ -17,13 +17,13 @@
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  padding: 2.25rem 2rem;
+  padding: 36px 32px;
 }
 
 .auth-title {
   box-sizing: border-box;
   margin: 0;
-  font-size: 1.75rem;
+  font-size: 28px;
   font-weight: 700;
   color: #1e293b;
   text-align: center;
@@ -31,7 +31,7 @@
 
 .auth-subtitle {
   box-sizing: border-box;
-  margin: 0.25rem 0 1.75rem;
+  margin: 4px 0 28px;
   text-align: center;
   color: #64748b;
 }
@@ -42,7 +42,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 18px;
 }
 
 .auth-form__group {
@@ -51,14 +51,14 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 6px;
 }
 
 .auth-form__label {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 600;
   color: #334155;
 }
@@ -66,8 +66,8 @@
 .auth-form__input {
   box-sizing: border-box;
   margin: 0;
-  padding: 0.7rem 0.85rem;
-  font-size: 1rem;
+  padding: 11px 14px;
+  font-size: 16px;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   background: #f8fafc;
@@ -89,16 +89,16 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-size: 0.8rem;
+  font-size: 13px;
   color: #ef4444;
-  min-height: 1rem;
+  min-height: 16px;
 }
 
 .btn {
   box-sizing: border-box;
   margin: 0;
-  padding: 0.75rem;
-  font-size: 1rem;
+  padding: 12px;
+  font-size: 16px;
   font-weight: 600;
   border: none;
   border-radius: 8px;
@@ -107,7 +107,7 @@
 }
 
 .btn--primary {
-  margin-top: 0.5rem;
+  margin-top: 8px;
   background: #2563eb;
   color: #ffffff;
 }
@@ -123,10 +123,10 @@
 
 .auth-alt {
   box-sizing: border-box;
-  margin: 1.5rem 0 0;
+  margin: 24px 0 0;
   padding: 0;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 14px;
   color: #64748b;
 }
 
