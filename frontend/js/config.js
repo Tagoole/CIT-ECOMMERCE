@@ -7,4 +7,5 @@ export const ENDPOINTS = {
   inventory: '/inventory',
   payments: '/payments',
   notifications: '/notifications',
+  messages: '/messages',
 };

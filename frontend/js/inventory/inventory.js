@@ -1,21 +1,21 @@
-// Inventory controller — owns state and data flow.
+// --------------------------------------------------------------------------
+// INVENTORY CONTROLLER
+// Owns page state ({ products, editingId }) and the data flow. It coordinates
+// the view (inventory-render.js, DOM only) and the data (inventory-api.js,
+// network only). It never touches the DOM or fetch directly itself.
 //
-// Function flow:
+// Startup flow:
 //   initInventoryPage()
-//     ├─ cacheEls()          collect DOM nodes
-//     ├─ createRenderer()    UI layer (inventory-render.js), passed onSave
-//     ├─ initEvents()        wire toolbar + table actions
-//     └─ loadProducts()      load → render
+//     1. cacheElements()   collect every DOM node the page needs
+//     2. createRenderer()  build the UI layer, pass handleSave as hook
+//     3. initEvents()      bind toolbar + table action listeners
+//     4. loadProducts()    fetch inventory, then render the table
 //
-//   Table actions → handleSave / handleDelete / handleStockAdjust /
-//                   handleAvailabilityCheck → inventoryApi → renderer
-//   Toolbar       → Show Low Stock → loadLowStock → renderer
-//                   Show All      → loadProducts  → renderer
-//
-//   inventoryApi (inventory-api.js) and the generic client (utils/api.js) are
-//   the ONLY modules that touch the network. The renderer only touches the DOM.
-// ---------------------------------------------------------------------------
-
+// User action flow:
+//   toolbar/table click -> handler (handleSave / handleDelete /
+//     handleStockAdjust / handleAvailabilityCheck)
+//       -> inventoryApi (fetch) -> renderer.showStatus / renderTable
+// --------------------------------------------------------------------------
 import { inventoryApi } from './inventory-api.js';
 import { createRenderer } from './inventory-render.js';
 
@@ -23,7 +23,7 @@ let products = [];
 let editingId = null;
 let renderer;
 
-function cacheEls() {
+function cacheElements() {
   return {
     addBtn: document.getElementById('add-product-btn'),
     cancelBtn: document.getElementById('product-cancel-btn'),
@@ -40,8 +40,9 @@ function cacheEls() {
   };
 }
 
+// --------------------------------------------------------------------------
 // Modal control
-
+// --------------------------------------------------------------------------
 function openModal(product = null) {
   editingId = product ? product.id : null;
   renderer.openModal(editingId !== null, product ?? {});
@@ -52,8 +53,9 @@ function closeModal() {
   editingId = null;
 }
 
+// --------------------------------------------------------------------------
 // Data loading
-
+// --------------------------------------------------------------------------
 async function loadProducts() {
   try {
     products = await inventoryApi.getAll();
@@ -73,9 +75,9 @@ async function loadLowStock(threshold) {
   }
 }
 
-// ---------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 // Mutations
-// ---------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 async function handleSave(data) {
   try {
     if (editingId) {
@@ -121,16 +123,16 @@ async function handleAvailabilityCheck(id) {
   try {
     const result = await inventoryApi.checkAvailability(id);
     renderer.showStatus(result.available
-      ? `In stock — ${result.quantity} available.`
+      ? `In stock -- ${result.quantity} available.`
       : 'Out of stock.');
   } catch (err) {
     renderer.showError(`Availability check failed: ${err.message}`);
   }
 }
 
-// ---------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 // Event wiring
-// ---------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 function onTableClick(event) {
   const btn = event.target.closest('button[data-action]');
   if (!btn) return;
@@ -158,27 +160,27 @@ function onTableClick(event) {
   }
 }
 
-function initEvents(els) {
-  els.addBtn.addEventListener('click', () => openModal(null));
-  els.cancelBtn.addEventListener('click', closeModal);
-  els.tableBody.addEventListener('click', onTableClick);
+function initEvents(elements) {
+  elements.addBtn.addEventListener('click', () => openModal(null));
+  elements.cancelBtn.addEventListener('click', closeModal);
+  elements.tableBody.addEventListener('click', onTableClick);
 
-  els.lowStockBtn.addEventListener('click', () => {
-    const threshold = Number(els.lowStockInput.value) || 10;
+  elements.lowStockBtn.addEventListener('click', () => {
+    const threshold = Number(elements.lowStockInput.value) || 10;
     loadLowStock(threshold);
   });
 
-  els.showAllBtn.addEventListener('click', loadProducts);
+  elements.showAllBtn.addEventListener('click', loadProducts);
 }
 
-// ---------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 // Entry point
-// ---------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 export function initInventoryPage() {
-  const els = cacheEls();
-  renderer = createRenderer(els, { onSave: handleSave });
+  const elements = cacheElements();
+  renderer = createRenderer(elements, { onSave: handleSave });
   renderer.init();
-  initEvents(els);
+  initEvents(elements);
   loadProducts();
 }
 

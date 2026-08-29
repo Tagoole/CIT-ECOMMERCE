@@ -1,12 +1,15 @@
-// ---------------------------------------------------------------------------
-// Inventory renderer — all DOM work for the inventory page.
-//
-// A pure-UI module: it never calls the API, reads localStorage, or decides
-// business logic. The controller passes in the DOM elements it needs and the
-// callbacks to trigger when the user acts (currently just onSave from the form).
-// ---------------------------------------------------------------------------
 
-// Schema — one source of truth for the product form. Add/remove a field here
+// --------------------------------------------------------------------------
+// INVENTORY RENDERER - pure UI layer
+// Handles every DOM change for the inventory page: dynamic form fields, the
+// add/edit modal, the product table, and status/error bars.
+//
+// It never calls the network or localStorage. The controller passes in the
+// DOM elements it needs and the callback to trigger when the form is saved
+// (onSave). Everything it returns is used by the controller after an action.
+// --------------------------------------------------------------------------
+
+// Schema - one source of truth for the product form. Add/remove a field here
 // and both the modal form and the table stay in sync.
 export const productFields = [
   { name: 'name', label: 'Product Name', type: 'text', required: true },
@@ -24,12 +27,14 @@ function escapeHtml(value) {
     .replace(/"/g, '&quot;');
 }
 
-export function createRenderer(els, { onSave } = {}) {
+export function createRenderer(elements, { onSave } = {}) {
   let statusTimeout;
 
-  // Modal form --------------------------------------------------------------
+  // --------------------------
+  // Modal form
+  // --------------------------
   function renderFormFields(product = {}) {
-    els.formFields.innerHTML = productFields.map((field) => {
+    elements.formFields.innerHTML = productFields.map((field) => {
       const value = product[field.name] ?? '';
       const requiredAttr = field.required ? 'required' : '';
 
@@ -55,7 +60,7 @@ export function createRenderer(els, { onSave } = {}) {
   }
 
   function readFormData() {
-    const formData = new FormData(els.form);
+    const formData = new FormData(elements.form);
     const data = {};
 
     productFields.forEach((field) => {
@@ -67,24 +72,26 @@ export function createRenderer(els, { onSave } = {}) {
   }
 
   function openModal(isEditing, product = {}) {
-    els.modalTitle.textContent = isEditing ? 'Edit Product' : 'Add Product';
+    elements.modalTitle.textContent = isEditing ? 'Edit Product' : 'Add Product';
     renderFormFields(product);
-    els.modal.showModal();
+    elements.modal.showModal();
   }
 
   function closeModal() {
-    els.modal.close();
-    els.form.reset();
+    elements.modal.close();
+    elements.form.reset();
   }
 
-  // Table -------------------------------------------------------------------
+  // --------------------------
+  // Table
+  // --------------------------
   function renderTable(list) {
     if (!list.length) {
-      els.tableBody.innerHTML = `<tr><td colspan="6" class="empty-row">No products found.</td></tr>`;
+      elements.tableBody.innerHTML = `<tr><td colspan="6" class="empty-row">No products found.</td></tr>`;
       return;
     }
 
-    els.tableBody.innerHTML = list.map((p) => `
+    elements.tableBody.innerHTML = list.map((p) => `
       <tr data-id="${p.id}" class="${p.quantityInStock <= 0 ? 'row-out-of-stock' : ''}">
         <td>${escapeHtml(p.name)}</td>
         <td>${escapeHtml(p.description ?? '')}</td>
@@ -102,24 +109,28 @@ export function createRenderer(els, { onSave } = {}) {
     `).join('');
   }
 
-  // Status / error ----------------------------------------------------------
+  // --------------------------
+  // Status / error
+  // --------------------------
   function showStatus(message) {
-    els.statusBar.textContent = message;
-    els.statusBar.hidden = false;
-    els.errorBar.hidden = true;
+    elements.statusBar.textContent = message;
+    elements.statusBar.hidden = false;
+    elements.errorBar.hidden = true;
     clearTimeout(statusTimeout);
-    statusTimeout = setTimeout(() => { els.statusBar.hidden = true; }, 3000);
+    statusTimeout = setTimeout(() => { elements.statusBar.hidden = true; }, 3000);
   }
 
   function showError(message) {
-    els.errorBar.textContent = message;
-    els.errorBar.hidden = false;
-    els.statusBar.hidden = true;
+    elements.errorBar.textContent = message;
+    elements.errorBar.hidden = false;
+    elements.statusBar.hidden = true;
   }
 
-  // Wiring ------------------------------------------------------------------
+  // --------------------------
+  // Wiring
+  // --------------------------
   function init() {
-    els.form.addEventListener('submit', (event) => {
+    elements.form.addEventListener('submit', (event) => {
       event.preventDefault();
       onSave?.(readFormData());
     });
