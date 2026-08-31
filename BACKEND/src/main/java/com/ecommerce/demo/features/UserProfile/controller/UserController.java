@@ -8,10 +8,7 @@ import com.ecommerce.demo.features.UserProfile.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("api/v1/users")
@@ -27,8 +24,12 @@ public class UserController {
             @RequestBody UserRequestFull userRequestFull
             ){
         ApiResponse<UserResponse> apiResponse = userService.addUser(userRequestFull);
-        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
 
+    @GetMapping("/id/{id}")
+    public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
     }
 
 
