@@ -5,8 +5,15 @@ import com.ecommerce.demo.features.UserProfile.dto.UserRequestFull;
 import com.ecommerce.demo.features.UserProfile.dto.UserResponse;
 import com.ecommerce.demo.features.UserProfile.mapper.UserMapper;
 import com.ecommerce.demo.features.UserProfile.model.UserModel;
+import com.ecommerce.demo.features.UserProfile.page.response.PageResponse;
 import com.ecommerce.demo.features.UserProfile.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -30,4 +37,25 @@ public class UserService {
                 .orElseThrow(()-> new RuntimeException("USER NOT FOUND"));
         return new  ApiResponse<UserResponse>("SUCCESS","Student Item",userMapper.toResponse(user));
     }
+
+
+    public ApiResponse<PageResponse<List<UserResponse>>> getAllUsers(int page, int pageSize){
+        int zeroBasedPage = Math.max(0,page-1);
+        Pageable pageable = PageRequest.of(zeroBasedPage,pageSize, Sort.by("id").ascending());
+        Page<UserModel> userPage = userRepository.findAll(pageable);
+        List<UserResponse> userResponseList = userPage.getContent()
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+
+        PageResponse<List<UserResponse>> pageResponse = new PageResponse<>(userResponseList,
+                userPage.getTotalPages(),
+                page,
+                userPage.getTotalElements(),
+                userPage.isLast()
+                );
+        return new ApiResponse<>("SUCCESS","Page Of Users",pageResponse);
+    }
+
+
 }
