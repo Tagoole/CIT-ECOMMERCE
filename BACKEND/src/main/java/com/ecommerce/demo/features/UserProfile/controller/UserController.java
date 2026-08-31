@@ -4,11 +4,14 @@ package com.ecommerce.demo.features.UserProfile.controller;
 import com.ecommerce.demo.features.UserProfile.ApiResponse;
 import com.ecommerce.demo.features.UserProfile.dto.UserRequestFull;
 import com.ecommerce.demo.features.UserProfile.dto.UserResponse;
+import com.ecommerce.demo.features.UserProfile.page.response.PageResponse;
 import com.ecommerce.demo.features.UserProfile.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("api/v1/users")
@@ -31,6 +34,17 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
     }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<PageResponse<List<UserResponse>>>> getAllUsers(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int pageSize
+    ){
+        ApiResponse<PageResponse<List<UserResponse>>> apiResponse = userService.getAllUsers(page,pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+
 
 
 
