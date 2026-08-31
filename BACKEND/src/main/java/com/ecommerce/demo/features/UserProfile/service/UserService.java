@@ -24,4 +24,10 @@ public class UserService {
         UserResponse userResponse = userMapper.toResponse(userRepository.save(user));
         return new ApiResponse<>("SUCCESS","User Added Successfully",userResponse);
     }
+
+    public ApiResponse<UserResponse> getUserById(Long id) {
+        UserModel  user = userRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("USER NOT FOUND"));
+        return new  ApiResponse<UserResponse>("SUCCESS","Student Item",userMapper.toResponse(user));
+    }
 }
