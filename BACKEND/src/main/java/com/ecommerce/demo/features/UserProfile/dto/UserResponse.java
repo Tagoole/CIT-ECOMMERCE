@@ -1,22 +1,25 @@
 package com.ecommerce.demo.features.UserProfile.dto;
 
-
-
-//public record UserResponse(String username,String phoneNumber, String email) {
-//}
-
-
-
 public class UserResponse{
     private String username;
     private String phoneNumber;
     private String email;
+    private Long id;
 
 
-    public UserResponse(String username, String phoneNumber, String email) {
+    public UserResponse(Long id, String username, String phoneNumber, String email) {
         this.username = username;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
