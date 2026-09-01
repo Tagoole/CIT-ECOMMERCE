@@ -1,5 +1,6 @@
 package com.ecommerce.demo.features.UserProfile.mapper;
 
+import com.ecommerce.demo.features.UserProfile.dto.UserLoginResponse;
 import com.ecommerce.demo.features.UserProfile.dto.UserRequestFull;
 import com.ecommerce.demo.features.UserProfile.dto.UserResponse;
 import com.ecommerce.demo.features.UserProfile.model.UserModel;
@@ -26,5 +27,16 @@ public class UserMapper {
         user.setPhoneNumber(request.phoneNumber());
         user.setUsername(request.username());
         return user;
+    }
+
+    public UserLoginResponse toLoginResponse(UserModel user, String message){
+        UserLoginResponse loginResponse = new UserLoginResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getPhoneNumber(),
+                user.getEmail()
+        );
+        loginResponse.setMessage(message);
+        return loginResponse;
     }
 }
