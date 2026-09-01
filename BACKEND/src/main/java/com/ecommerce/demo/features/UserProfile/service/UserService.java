@@ -1,6 +1,8 @@
 package com.ecommerce.demo.features.UserProfile.service;
 
 import com.ecommerce.demo.features.UserProfile.ApiResponse;
+import com.ecommerce.demo.features.UserProfile.dto.UserLoginDTO;
+import com.ecommerce.demo.features.UserProfile.dto.UserLoginResponse;
 import com.ecommerce.demo.features.UserProfile.dto.UserRequestFull;
 import com.ecommerce.demo.features.UserProfile.dto.UserResponse;
 import com.ecommerce.demo.features.UserProfile.mapper.UserMapper;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -55,6 +58,25 @@ public class UserService {
                 userPage.isLast()
                 );
         return new ApiResponse<>("SUCCESS","Page Of Users",pageResponse);
+    }
+
+
+
+    public ApiResponse<UserLoginResponse> login(UserLoginDTO userLoginDTO){
+        UserModel user = userRepository.findByUsername(userLoginDTO.username())
+                .orElse(null);
+
+        if(user == null ||  !Objects.equals(userLoginDTO.password(), user.getPassword())){
+            return new ApiResponse<>("ERROR",
+                    "Wrong username or password",
+                        null
+                    );
+        }
+        return new ApiResponse<>("SUCCESS",
+                "Login Successful",
+                userMapper.toLoginResponse(user,"Login Successful")
+        );
+
     }
 
 
