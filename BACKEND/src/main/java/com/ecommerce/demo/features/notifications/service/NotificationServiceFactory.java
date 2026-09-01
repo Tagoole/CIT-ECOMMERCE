@@ -69,12 +69,11 @@ class INAPPNotificationService implements NotificationService{
 @Service
 public class NotificationServiceFactory {
     Map<NotificationMode,NotificationService> services;
-    private final NotificationRepository notificationRepository;
 
     public NotificationServiceFactory(List<NotificationService> allServices, NotificationRepository notificationRepository){
         this.services = allServices.stream()
                 .collect(Collectors.toMap(NotificationService::mode,s->s));
-        this.notificationRepository = notificationRepository;
+
     }
 
     public NotificationService getService(NotificationMode notificationMode){
@@ -84,28 +83,5 @@ public class NotificationServiceFactory {
         }
         return  selectedService;
     }
-
-    public Notification save(Notification notification){
-        return notificationRepository.save(notification);
-    }
-
-    public Notification findById(Long id){
-        return notificationRepository.findById(id).orElseThrow(
-                ()-> new NotificationNotFoundException("Notification not found with id "+id)
-        );
-    }
-
-    public List<Notification> findAll(){
-        return notificationRepository.findAll();
-    }
-
-    public void deleteById(Long id){
-        if(!notificationRepository.existsById(id)){
-            throw new NotificationNotFoundException("Notification not found with id"+id);
-        }
-        notificationRepository.deleteById(id);
-    }
-
-
 
 }

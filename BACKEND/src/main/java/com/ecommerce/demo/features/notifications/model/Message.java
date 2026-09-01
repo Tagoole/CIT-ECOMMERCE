@@ -20,12 +20,10 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_id",nullable = false)
+    @Column(nullable = false)
     private Long senderId;
 
-    @ManyToOne
-    @JoinColumn(name = "product_owner_id", nullable = false)
+    @Column(nullable = false)
     private Long receiverId;
 
     @Column(nullable = false)

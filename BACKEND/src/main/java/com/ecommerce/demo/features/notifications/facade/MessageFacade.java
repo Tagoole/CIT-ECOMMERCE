@@ -1,8 +1,10 @@
 package com.ecommerce.demo.features.notifications.facade;
 
 
+import com.ecommerce.demo.features.UserProfile.service.UserService;
 import com.ecommerce.demo.features.notifications.dto.MessageRequest;
 import com.ecommerce.demo.features.notifications.dto.MessageResponse;
+import com.ecommerce.demo.features.notifications.exception.NotFoundException;
 import com.ecommerce.demo.features.notifications.mapper.MessageMapper;
 import com.ecommerce.demo.features.notifications.model.Message;
 import com.ecommerce.demo.features.notifications.service.MessageService;
@@ -17,15 +19,28 @@ import java.util.List;
 public class MessageFacade {
     private final MessageMapper messageMapper;
     private final MessageService messageService;
+    private final UserService userService;
 
-    public MessageFacade(MessageMapper messageMapper, MessageService messageService){
+    public MessageFacade(MessageMapper messageMapper, MessageService messageService,UserService userService){
         this.messageMapper = messageMapper;
         this.messageService = messageService;
+        this.userService = userService;
     }
 
+    private void verifyUserExists(Long userId){
+        try{
+            userService.getUserById(userId);
+        } catch (RuntimeException exception){
+            throw new NotFoundException("No User found with id"+userId);
+        }
+    }
 
     @Transactional
     public MessageResponse create(MessageRequest messageRequest){
+        //Long senderId = userService.getUserById(messageRequest.senderId());
+        verifyUserExists(messageRequest.senderId());
+        verifyUserExists(messageRequest.receiverId());
+        //Long receiverId,
         Message message = messageMapper.toEntity(messageRequest);
         Message savedMessage = messageService.save(message);
         return messageMapper.toResponse(savedMessage);
