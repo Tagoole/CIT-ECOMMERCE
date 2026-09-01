@@ -2,6 +2,8 @@ package com.ecommerce.demo.features.UserProfile.controller;
 
 
 import com.ecommerce.demo.features.UserProfile.ApiResponse;
+import com.ecommerce.demo.features.UserProfile.dto.UserLoginDTO;
+import com.ecommerce.demo.features.UserProfile.dto.UserLoginResponse;
 import com.ecommerce.demo.features.UserProfile.dto.UserRequestFull;
 import com.ecommerce.demo.features.UserProfile.dto.UserResponse;
 import com.ecommerce.demo.features.UserProfile.page.response.PageResponse;
@@ -41,6 +43,15 @@ public class UserController {
             @RequestParam(defaultValue = "10") int pageSize
     ){
         ApiResponse<PageResponse<List<UserResponse>>> apiResponse = userService.getAllUsers(page,pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+
+    @PostMapping("login")
+    public ResponseEntity<ApiResponse<UserLoginResponse>> login(
+            @RequestBody UserLoginDTO userLoginDTO
+            ){
+        ApiResponse<UserLoginResponse> apiResponse = userService.login(userLoginDTO);
         return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
