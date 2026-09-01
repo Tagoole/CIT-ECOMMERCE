@@ -2,11 +2,14 @@ spring:
   application:
     name: demo
 
-
   datasource:
-    url: jdbc:postgresql://localhost:5432/capstoneapidb
+    url: jdbc:postgresql://localhost:5432/ecommercedb
     username: postgres
     password: mugwadavid
+
+  session:
+    jdbc:
+      initialize-schema: always
 
   jpa:
     hibernate:
@@ -14,3 +17,4 @@ spring:
     show-sql: true
     properties:
       hibernate:
+        format_sql: true
