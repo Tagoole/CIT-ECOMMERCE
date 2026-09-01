@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "message")
 @Getter
@@ -20,12 +22,15 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "sender_id",nullable = false)
-    private User user;
+    private Long senderId;
 
     @ManyToOne
     @JoinColumn(name = "product_owner_id", nullable = false)
-    private User productOwner;
+    private Long receiverId;
 
     @Column(nullable = false)
     private String text;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 }

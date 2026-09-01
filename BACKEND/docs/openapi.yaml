@@ -1,0 +1,321 @@
+openapi: 3.1.0
+
+
+info:
+  title: E-Commerce Documentation For Message and Notification
+  version: 1.0.0
+  description: Manage messages and notifications
+
+
+servers:
+  - url: http://localhost:8080
+    description: Local Development
+
+components:
+  schemas:
+    Message:
+      type: object
+      properties:
+        id: { type: integer }
+        senderId: { type: integer }
+        receiverId: { type: integer }
+        text: { type: string }
+        createdAt: { type: datetime }
+
+    Notification:
+      type: object
+      properties:
+        id: { type: integer }
+        mode:
+          type: string
+          enum: [SMS,EMAIL,INAPP]
+        title: { type: string }
+        body: { type: string }
+        createdAt: { type: datetime }
+        recipient: { type: string }
+
+    NewMessage:
+      type: object
+      properties:
+        senderId: { type: integer }
+        receiverId: { type: integer }
+        text: { type: string }
+
+    NewNotification:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum: [EMAIL, INAPP, SMS]
+        title: { type: string }
+        body: { type: string }
+        recipient: { type: string }
+
+    MessageApiResponse:
+      type: object
+      properties:
+        status: { type: string }
+        message: { type: string }
+        data:
+          $ref: '#/components/schemas/Message'
+
+    NotificationApiResponse:
+      type: object
+      properties:
+        status: { type: string }
+        message: { type: string }
+        data:
+          $ref: '#/components/schemas/Notification'
+
+    MessageListApiResponse:
+      type: object
+      properties:
+        status: { type: string }
+        message: { type: string }
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+
+    NotificationListApiResponse:
+      type: object
+      properties:
+        status: { type: string }
+        message: { type: string }
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+
+
+paths:
+  /api/v1/messages:
+    post:
+      operationId: createMessage
+      summary: Create a message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewMessage'
+
+      responses:
+        201:
+          description: Message Created Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageApiResponse'
+
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageApiResponse'
+
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageApiResponse'
+
+    get:
+      operationId: getAllMessages
+      summary: Get All Messages
+      responses:
+        200:
+          description: Messages Fetched Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageListApiResponse'
+
+
+  /api/v1/messages/{id}:
+    get:
+      operationId: getMessageById
+      summary: Fetch a Specific Message
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        200:
+          description: Successfully Fetched Message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageApiResponse'
+
+        404:
+          description: Message Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageApiResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageApiResponse'
+
+    put:
+      operationId: updateMessageById
+      summary: Update a specific Message
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        200:
+          description: Update message successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageApiResponse'
+
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageApiResponse'
+
+    delete:
+      operationId: deleteMessageById
+      summary: Delete Message By Id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        204:
+          description: Delete Message by Id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageApiResponse'
+
+
+  /api/v1/notifications:
+    post:
+      operationId: creaateNotification
+      summary: Create a notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewNotification'
+
+      responses:
+        201:
+          description: Notification Created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationApiResponse'
+
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationApiResponse'
+
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationApiResponse'
+
+
+
+
+    get:
+      operationId: getAllNotifications
+      summary: Get All Notifications
+      responses:
+        200:
+          description: Notifications Fetched Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationListApiResponse'
+
+  /api/v1/notifications/{id}:
+    put:
+      operationId: updateNotificationById
+      summary: Update a specific Notification
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        200:
+          description: Update Notification successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationApiResponse'
+
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationApiResponse'
+    get:
+      operationId: getNotificationById
+      summary: Get a specific Notification
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        200:
+          description: Notification Fetched Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationApiResponse'
+
+    delete:
+      operationId: deleteNotificationById
+      summary: Delete Notification By Id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        204:
+          description: Delete Notification by Id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationApiResponse'
+
+
