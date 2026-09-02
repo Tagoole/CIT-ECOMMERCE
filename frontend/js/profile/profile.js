@@ -1,103 +1,97 @@
-(function () {
-  const form = document.getElementById("profileForm");
-  const username = document.getElementById("username");
-  const phone = document.getElementById("phone");
-  const email = document.getElementById("email");
-  const usernameError = document.getElementById("usernameError");
-  const phoneError = document.getElementById("phoneError");
-  const emailError = document.getElementById("emailError");
-  const greeting = document.getElementById("profileGreeting");
-  const logoutButton = document.getElementById("logoutButton");
+const form = document.querySelector("#profileForm");
+const statusEl = document.querySelector("#profileDone");
 
-  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const PHONE_RE = /^\+?\d[\d\s-]{8,14}$/;
-  const USERNAME_RE = /^[a-zA-Z0-9_]{3,20}$/;
+const email = document.querySelector("#email");
+const phone = document.querySelector("#phone");
+const username = document.querySelector("#username");
+const emailError = document.querySelector("#emailError");
+const phoneError = document.querySelector("#phoneError");
+const usernameError = document.querySelector("#usernameError");
+const greetingEl = document.querySelector("#profileGreeting");
+const logoutBtn = document.querySelector("#logoutButton");
 
-  function getCurrentUser() {
-    return JSON.parse(localStorage.getItem("cit_current_user") || "null");
+function setError(input, errorEl, message) {
+  input.classList.remove("profile-form__input--invalid");
+  errorEl.textContent = "";
+  if (message) {
+    input.classList.add("profile-form__input--invalid");
+    errorEl.textContent = message;
+  }
+}
+
+function validate() {
+  let valid = true;
+
+  if (!email.value.trim() || !email.value.includes("@")) {
+    setError(email, emailError, "Enter a valid email address.");
+    valid = false;
+  } else {
+    setError(email, emailError);
   }
 
-  function setError(input, errorEl, message) {
-    input.classList.remove("profile-form__input--invalid");
-    errorEl.textContent = "";
-    if (message) {
-      input.classList.add("profile-form__input--invalid");
-      errorEl.textContent = message;
-    }
+  if (!phone.value.trim()) {
+    setError(phone, phoneError, "Enter your phone number.");
+    valid = false;
+  } else {
+    setError(phone, phoneError);
   }
 
-  const currentUser = getCurrentUser();
+  if (username.value.trim().length < 3) {
+    setError(username, usernameError, "Username must be at least 3 characters.");
+    valid = false;
+  } else {
+    setError(username, usernameError);
+  }
 
-  if (!currentUser) {
-    window.location.href = "login.html";
+  return valid;
+}
+
+async function loadProfile() {
+  statusEl.textContent = "Loading profile...";
+  try {
+    const data = await apiRequest(API.profile);
+    username.value = data.username || "";
+    phone.value = data.phone || "";
+    email.value = data.email || "";
+    greetingEl.textContent = data.username || "friend";
+    statusEl.textContent = "";
+  } catch (error) {
+    statusEl.textContent = error.message || "Failed to load profile.";
+  }
+}
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (!validate()) {
     return;
   }
 
-  username.value = currentUser.username || "";
-  phone.value = currentUser.phone || "";
-  email.value = currentUser.email || "";
-  greeting.textContent = currentUser.username || "friend";
+  const updatedProfile = {
+    username: username.value.trim(),
+    phone: phone.value.trim(),
+    email: email.value.trim(),
+  };
 
-  function validate() {
-    let valid = true;
+  statusEl.textContent = "Saving changes...";
 
-    if (!USERNAME_RE.test(username.value.trim())) {
-      setError(username, usernameError, "Username must be 3-20 letters, numbers or underscores.");
-      valid = false;
-    } else {
-      setError(username, usernameError);
-    }
-
-    if (!PHONE_RE.test(phone.value.trim())) {
-      setError(phone, phoneError, "Enter a valid phone number.");
-      valid = false;
-    } else {
-      setError(phone, phoneError);
-    }
-
-    if (!EMAIL_RE.test(email.value.trim())) {
-      setError(email, emailError, "Enter a valid email address.");
-      valid = false;
-    } else {
-      setError(email, emailError);
-    }
-
-    return valid;
+  try {
+    await apiRequest(API.profile, {
+      method: "PUT",
+      body: JSON.stringify(updatedProfile),
+    });
+  } catch (error) {
+    statusEl.textContent = error.message || "Failed to update profile.";
+    return;
   }
 
-  form.addEventListener("submit", async function (event) {
-    event.preventDefault();
+  statusEl.textContent = "Profile updated!";
+  greetingEl.textContent = updatedProfile.username;
+});
 
-    if (!validate()) {
-      return;
-    }
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("cit_token");
+  window.location.href = "login.html";
+});
 
-    const updated = {
-      email: email.value.trim().toLowerCase(),
-      phone: phone.value.trim(),
-      username: username.value.trim(),
-    };
-
-    try {
-      const data = await apiRequest(API.profile, {
-        method: "PUT",
-        body: JSON.stringify(updated),
-      });
-
-      const savedUser = (data && data.user) || data || {};
-      const sessionUser = Object.assign({}, currentUser, savedUser);
-
-      localStorage.setItem("cit_current_user", JSON.stringify(sessionUser));
-      greeting.textContent = sessionUser.username;
-      alert("Profile updated.");
-    } catch (error) {
-      alert(error.message || "Failed to update profile. Please try again.");
-    }
-  });
-
-  logoutButton.addEventListener("click", function () {
-    localStorage.removeItem("cit_current_user");
-    localStorage.removeItem("cit_token");
-    window.location.href = "login.html";
-  });
-})();
+loadProfile();
