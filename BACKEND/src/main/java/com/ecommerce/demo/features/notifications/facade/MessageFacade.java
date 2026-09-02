@@ -37,10 +37,13 @@ public class MessageFacade {
 
     @Transactional
     public MessageResponse create(MessageRequest messageRequest){
-        //Long senderId = userService.getUserById(messageRequest.senderId());
         verifyUserExists(messageRequest.senderId());
         verifyUserExists(messageRequest.receiverId());
-        //Long receiverId,
+
+        if (messageRequest.senderId().equals(messageRequest.receiverId())) {
+            throw new IllegalArgumentException("Sender and receiver cannot be the same");
+        }
+
         Message message = messageMapper.toEntity(messageRequest);
         Message savedMessage = messageService.save(message);
         return messageMapper.toResponse(savedMessage);
@@ -60,6 +63,13 @@ public class MessageFacade {
 
     @Transactional
     public MessageResponse update(Long id, MessageRequest message){
+        verifyUserExists(message.senderId());
+        verifyUserExists(message.receiverId());
+
+        if (message.senderId().equals(message.receiverId())) {
+            throw new IllegalArgumentException("Sender and receiver cannot be the same");
+        }
+
         Message existingMessage = messageService.findById(id);
         existingMessage.setSenderId(message.senderId());
         existingMessage.setReceiverId(message.receiverId());

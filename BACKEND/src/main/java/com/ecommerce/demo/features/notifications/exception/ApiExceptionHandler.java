@@ -24,6 +24,12 @@ public class ApiExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Object>> handleIllegalArgument(IllegalArgumentException ex) {
+        ApiResponse<Object> body = new ApiResponse<>("BAD_REQUEST", ex.getMessage(), null);
+        return ResponseEntity.badRequest().body(body);
+    }
+
     @ExceptionHandler({
             NotFoundException.class,
             MessageNotFoundException.class,
