@@ -1,6 +1,6 @@
 package com.ecommerce.demo.features.notifications.controller;
 
-import com.ecommerce.demo.features.notifications.dto.MessageApiResponse;
+import com.ecommerce.demo.features.notifications.dto.ApiResponse;
 import com.ecommerce.demo.features.notifications.dto.MessageRequest;
 import com.ecommerce.demo.features.notifications.dto.MessageResponse;
 import com.ecommerce.demo.features.notifications.facade.MessageFacade;
@@ -20,9 +20,9 @@ public class MessageController {
     }
 
     @PostMapping()
-    public ResponseEntity<MessageApiResponse<MessageResponse>> createMessage(@Valid @RequestBody MessageRequest messageRequest){
+    public ResponseEntity<ApiResponse<MessageResponse>> createMessage(@Valid @RequestBody MessageRequest messageRequest){
         MessageResponse created = messageFacade.create(messageRequest);
-        MessageApiResponse<MessageResponse> body = new MessageApiResponse<>(
+        ApiResponse<MessageResponse> body = new ApiResponse<>(
                 "SUCCESS",
                 "Message Created successfully",
                 created
@@ -32,9 +32,9 @@ public class MessageController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<MessageApiResponse<MessageResponse>> findById(@PathVariable Long id){
+    public ResponseEntity<ApiResponse<MessageResponse>> findById(@PathVariable Long id){
         MessageResponse message = messageFacade.findById(id);
-        MessageApiResponse<MessageResponse> body = new MessageApiResponse<>(
+        ApiResponse<MessageResponse> body = new ApiResponse<>(
                 "SUCCESS",
                 "Message fetched Successfully",
                 message
@@ -44,9 +44,9 @@ public class MessageController {
     }
 
     @GetMapping
-    public ResponseEntity<MessageApiResponse<List<MessageResponse>>> findAll(){
+    public ResponseEntity<ApiResponse<List<MessageResponse>>> findAll(){
         List<MessageResponse> messages = messageFacade.findAll();
-        MessageApiResponse<List<MessageResponse>> body = new MessageApiResponse<>(
+        ApiResponse<List<MessageResponse>> body = new ApiResponse<>(
                 "SUCCESS",
                 "Messages fetched Successfully",
                 messages
@@ -56,9 +56,9 @@ public class MessageController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MessageApiResponse<MessageResponse>> updateMessage(@Valid @RequestBody MessageRequest messageRequest, @PathVariable Long id){
+    public ResponseEntity<ApiResponse<MessageResponse>> updateMessage(@Valid @RequestBody MessageRequest messageRequest, @PathVariable Long id){
         MessageResponse message = messageFacade.update(id,messageRequest);
-        MessageApiResponse<MessageResponse> body  = new MessageApiResponse<>(
+        ApiResponse<MessageResponse> body  = new ApiResponse<>(
                 "SUCCESS",
                 "Message Updated Successfully",
                 message
@@ -69,9 +69,9 @@ public class MessageController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MessageApiResponse<Void>> deleteById(@PathVariable Long id){
+    public ResponseEntity<ApiResponse<Void>> deleteById(@PathVariable Long id){
         messageFacade.deleteById(id);
-        MessageApiResponse<Void> body = new MessageApiResponse<>(
+        ApiResponse<Void> body = new ApiResponse<>(
           "SUCESS",
           "Message Deleted Successfully",
           null

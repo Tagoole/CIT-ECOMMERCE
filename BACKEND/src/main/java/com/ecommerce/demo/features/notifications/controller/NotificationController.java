@@ -20,9 +20,9 @@ public class NotificationController {
     }
 
     @PostMapping
-    public ResponseEntity<NotificationApiResponse<NotificationResponse>> createNotification(@Valid @RequestBody NotificationRequest notificationRequest){
+    public ResponseEntity<ApiResponse<NotificationResponse>> createNotification(@Valid @RequestBody NotificationRequest notificationRequest){
         NotificationResponse created = notificationFacade.sendNotification(notificationRequest);
-        NotificationApiResponse<NotificationResponse> body = new NotificationApiResponse<>(
+        ApiResponse<NotificationResponse> body = new ApiResponse<>(
                 "SUCCESS",
                 "Notification Created successfully",
                 created
@@ -32,9 +32,9 @@ public class NotificationController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<NotificationApiResponse<NotificationResponse>> findById(@PathVariable Long id){
+    public ResponseEntity<ApiResponse<NotificationResponse>> findById(@PathVariable Long id){
         NotificationResponse message = notificationFacade.findById(id);
-        NotificationApiResponse<NotificationResponse> body = new NotificationApiResponse<>(
+        ApiResponse<NotificationResponse> body = new ApiResponse<>(
                 "SUCCESS",
                 "Notification fetched Successfully",
                 message
@@ -44,9 +44,9 @@ public class NotificationController {
     }
 
     @GetMapping
-    public ResponseEntity<NotificationApiResponse<List<NotificationResponse>>> findAll(){
+    public ResponseEntity<ApiResponse<List<NotificationResponse>>> findAll(){
         List<NotificationResponse> notifications = notificationFacade.findAll();
-        NotificationApiResponse<List<NotificationResponse>> body = new NotificationApiResponse<>(
+        ApiResponse<List<NotificationResponse>> body = new ApiResponse<>(
                 "SUCCESS",
                 "Notifications fetched Successfully",
                 notifications
@@ -58,9 +58,9 @@ public class NotificationController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<NotificationApiResponse<Void>> deleteById(@PathVariable Long id){
+    public ResponseEntity<ApiResponse<Void>> deleteById(@PathVariable Long id){
         notificationFacade.deleteById(id);
-        NotificationApiResponse<Void> body = new NotificationApiResponse<>(
+        ApiResponse<Void> body = new ApiResponse<>(
                 "SUCESS",
                 "Notification Deleted Successfully",
                 null
