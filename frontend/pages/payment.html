@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payments</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/pages/payment.css" />
+</head>
+<body>
+  <header class="page-header">
+    <h1>Payments</h1>
+  </header>
+
+  <main class="payment-main">
+    <div id="payment-status" class="status-bar status-success" hidden></div>
+    <div id="payment-error" class="status-bar status-error" hidden></div>
+
+    <!-- Tabs -->
+    <div class="payment-tabs">
+      <button class="tab-btn active" data-provider="paypal">PayPal</button>
+      <button class="tab-btn" data-provider="mtn">MTN MoMo</button>
+      <button class="tab-btn" data-provider="creditCard">Credit Card</button>
+      <button class="tab-btn" data-provider="airtel">Airtel Money</button>
+    </div>
+
+    <!-- Payment Form -->
+    <section class="payment-form-section">
+      <h2>Process Payment</h2>
+      <form id="payment-form" class="payment-form">
+        <div id="payment-form-fields" class="form-fields"></div>
+        <button type="submit" id="payment-submit-btn" class="btn btn-primary">Process Payment</button>
+      </form>
+    </section>
+
+    <!-- PayPal Panel -->
+    <section class="payment-panel" data-provider-panel="paypal">
+      <h2>PayPal Payments</h2>
+      <table class="payment-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="paypal-table-body">
+          <tr><td colspan="6" class="empty-row">Loading...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- MTN Panel -->
+    <section class="payment-panel" data-provider-panel="mtn" hidden>
+      <h2>MTN Mobile Money Payments</h2>
+      <table class="payment-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Phone</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="mtn-table-body">
+          <tr><td colspan="6" class="empty-row">Loading...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Credit Card Panel -->
+    <section class="payment-panel" data-provider-panel="creditCard" hidden>
+      <h2>Credit Card Payments</h2>
+      <table class="payment-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Card Number</th>
+            <th>Card Holder</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="credit-card-table-body">
+          <tr><td colspan="7" class="empty-row">Loading...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Airtel Panel -->
+    <section class="payment-panel" data-provider-panel="airtel" hidden>
+      <h2>Airtel Money Payments</h2>
+      <table class="payment-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Phone</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="airtel-table-body">
+          <tr><td colspan="6" class="empty-row">Loading...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="../js/payments/payment.js"></script>
+</body>
+</html>

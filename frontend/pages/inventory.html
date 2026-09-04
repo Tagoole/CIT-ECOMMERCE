@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory Management</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/pages/inventory.css" />
+</head>
+<body>
+  <header class="page-header">
+    <h1>Inventory</h1>
+    <button id="add-product-btn" class="btn btn-primary">+ Add Product</button>
+  </header>
+
+  <main class="inventory-main">
+    <div id="inventory-status" class="status-bar status-success" hidden></div>
+    <div id="inventory-error" class="status-bar status-error" hidden></div>
+
+    <div class="inventory-toolbar">
+      <label class="low-stock-control">
+        <span>Low stock threshold</span>
+        <input type="number" id="low-stock-threshold" value="10" min="0" />
+      </label>
+      <button id="low-stock-btn" class="btn btn-secondary">Show Low Stock</button>
+      <button id="show-all-btn" class="btn btn-secondary">Show All</button>
+    </div>
+
+    <table class="inventory-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Qty In Stock</th>
+          <th>SKU</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="inventory-table-body">
+        <tr><td colspan="6" class="empty-row">Loading...</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <dialog id="product-modal" class="modal">
+    <form id="product-form" class="modal-form">
+      <h2 id="product-modal-title">Add Product</h2>
+      <div id="product-form-fields" class="form-fields"></div>
+      <div class="modal-actions">
+        <button type="button" id="product-cancel-btn" class="btn btn-secondary">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="../js/inventory/inventory.js"></script>
+</body>
+</html>

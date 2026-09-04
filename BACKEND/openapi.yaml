@@ -1,0 +1,396 @@
+openapi: 3.0.3
+info:
+  title: CIT-ECommerce Payment API
+  description: |
+    Payment processing API for the CIT-ECommerce platform.
+    Supports PayPal, MTN Mobile Money, Credit Card, and Airtel Money payments.
+  version: 1.0.0
+  contact:
+    name: CIT-ECommerce Team
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+tags:
+  - name: PayPal
+    description: PayPal payment operations
+  - name: MTN
+    description: MTN Mobile Money payment operations
+  - name: Credit Card
+    description: Credit Card payment operations
+  - name: Airtel
+    description: Airtel Money payment operations
+
+paths:
+  /api/v1/payment/paypal:
+    get:
+      tags: [PayPal]
+      summary: Get all PayPal payments
+      operationId: getAllPaypalPayments
+      responses:
+        '200':
+          description: List of all PayPal payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaypalPaymentResponse'
+
+  /api/v1/payment/paypal/process:
+    post:
+      tags: [PayPal]
+      summary: Process a PayPal payment
+      operationId: processPaypalPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaypalPaymentRequest'
+      responses:
+        '200':
+          description: Payment processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaypalPaymentResponse'
+        '400':
+          description: Payment processing failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/payment/mtn:
+    get:
+      tags: [MTN]
+      summary: Get all MTN payments
+      operationId: getAllMtnPayments
+      responses:
+        '200':
+          description: List of all MTN payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MtnPaymentResponse'
+
+  /api/v1/payment/mtn/process:
+    post:
+      tags: [MTN]
+      summary: Process an MTN Mobile Money payment
+      operationId: processMtnPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MtnPaymentRequest'
+      responses:
+        '200':
+          description: Payment processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MtnPaymentResponse'
+        '400':
+          description: Payment processing failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/payment/credit-card:
+    get:
+      tags: [Credit Card]
+      summary: Get all Credit Card payments
+      operationId: getAllCreditCardPayments
+      responses:
+        '200':
+          description: List of all Credit Card payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreditCardPaymentResponse'
+
+  /api/v1/payment/credit-card/process:
+    post:
+      tags: [Credit Card]
+      summary: Process a Credit Card payment
+      operationId: processCreditCardPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditCardPaymentRequest'
+      responses:
+        '200':
+          description: Payment processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditCardPaymentResponse'
+        '400':
+          description: Payment processing failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/payment/airtel:
+    get:
+      tags: [Airtel]
+      summary: Get all Airtel Money payments
+      operationId: getAllAirtelPayments
+      responses:
+        '200':
+          description: List of all Airtel Money payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AirtelPaymentResponse'
+
+  /api/v1/payment/airtel/process:
+    post:
+      tags: [Airtel]
+      summary: Process an Airtel Money payment
+      operationId: processAirtelPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AirtelPaymentRequest'
+      responses:
+        '200':
+          description: Payment processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AirtelPaymentResponse'
+        '400':
+          description: Payment processing failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    # ── PayPal ──────────────────────────────────────────────
+    PaypalPaymentRequest:
+      type: object
+      required: [email, amount, currency]
+      properties:
+        email:
+          type: string
+          format: email
+          example: "buyer@paypal.com"
+          description: PayPal account email
+        amount:
+          type: number
+          format: double
+          minimum: 0.01
+          example: 99.99
+          description: Payment amount
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: "USD"
+          description: ISO 4217 currency code
+
+    PaypalPaymentResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        email:
+          type: string
+          format: email
+          example: "buyer@paypal.com"
+        amount:
+          type: number
+          format: double
+          example: 99.99
+        currency:
+          type: string
+          example: "USD"
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED]
+          example: "PENDING"
+
+    # ── MTN Mobile Money ────────────────────────────────────
+    MtnPaymentRequest:
+      type: object
+      required: [phoneNumber, amount, currency]
+      properties:
+        phoneNumber:
+          type: string
+          example: "+256700000000"
+          description: MTN Mobile Money phone number
+        amount:
+          type: number
+          format: double
+          minimum: 0.01
+          example: 50000
+          description: Payment amount
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: "UGX"
+          description: ISO 4217 currency code
+
+    MtnPaymentResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        phoneNumber:
+          type: string
+          example: "+256700000000"
+        amount:
+          type: number
+          format: double
+          example: 50000
+        currency:
+          type: string
+          example: "UGX"
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED]
+          example: "PENDING"
+
+    # ── Credit Card ─────────────────────────────────────────
+    CreditCardPaymentRequest:
+      type: object
+      required: [cardNumber, cardHolder, amount, currency]
+      properties:
+        cardNumber:
+          type: string
+          minLength: 16
+          maxLength: 19
+          example: "4111111111111111"
+          description: Card number (digits only)
+        cardHolder:
+          type: string
+          example: "John Doe"
+          description: Cardholder full name
+        amount:
+          type: number
+          format: double
+          minimum: 0.01
+          example: 150.00
+          description: Payment amount
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: "USD"
+          description: ISO 4217 currency code
+
+    CreditCardPaymentResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        cardNumber:
+          type: string
+          example: "4111111111111111"
+        cardHolder:
+          type: string
+          example: "John Doe"
+        amount:
+          type: number
+          format: double
+          example: 150.00
+        currency:
+          type: string
+          example: "USD"
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED]
+          example: "PENDING"
+
+    # ── Airtel Money ────────────────────────────────────────
+    AirtelPaymentRequest:
+      type: object
+      required: [phoneNumber, amount, currency]
+      properties:
+        phoneNumber:
+          type: string
+          example: "+256700000000"
+          description: Airtel Money phone number
+        amount:
+          type: number
+          format: double
+          minimum: 0.01
+          example: 25000
+          description: Payment amount
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: "UGX"
+          description: ISO 4217 currency code
+
+    AirtelPaymentResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        phoneNumber:
+          type: string
+          example: "+256700000000"
+        amount:
+          type: number
+          format: double
+          example: 25000
+        currency:
+          type: string
+          example: "UGX"
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED]
+          example: "PENDING"
+
+    # ── Common ──────────────────────────────────────────────
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-08-29T16:00:00Z"
+        status:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: "Bad Request"
+        message:
+          type: string
+          example: "Failed to process payment: insufficient funds"
+        path:
+          type: string
+          example: "/api/v1/payment/paypal/process"
